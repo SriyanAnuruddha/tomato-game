@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table';
 
 export default function LeaderBoard() {
     return (
-        <Card className='bg-secondary' style={{ width: '20rem' }}>
+        <Card className='bg-secondary' >
             <Card.Body className='d-flex flex-column  justify-content-start align-items-center'>
                 <Card.Title > Leader Board</Card.Title>
                 <Table striped bordered hover>
