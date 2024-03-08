@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 
 export default function NavigationBar() {
     return (
-        <Navbar bg="dark" data-bs-theme="dark">
+        <Navbar bg="primary" data-bs-theme="light">
             <Container>
                 <Navbar.Brand as={Link} to='/'>TomatoQuest</Navbar.Brand>
                 <Nav >

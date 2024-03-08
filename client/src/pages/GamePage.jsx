@@ -4,6 +4,9 @@ import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+
 export default function GamePage() {
     return (
         <>
@@ -30,13 +33,15 @@ export default function GamePage() {
                     </div>
                 </div>
 
-                <div className="row border ">
-                    <div className="col d-flex justify-content-center">
-                        <label htmlFor="">Enter your answer</label>
-                        <input type="text" />
-                        <button>submit</button>
+                <div className="row border">
+                    <div className="col input-group  d-flex  justify-content-center">
+                        <div className="w-25 m-2">
+                            <input type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
+                        </div>
+                        <div class="input-group-prepend ">
+                            <button class="btn btn-primary m-2" type="button">Button</button>
+                        </div>
                     </div>
-
                 </div>
             </div >
         </>

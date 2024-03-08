@@ -6,7 +6,7 @@ export default function LeaderBoard() {
     return (
         <Card className='bg-secondary' >
             <Card.Body className='d-flex flex-column  justify-content-start align-items-center'>
-                <Card.Title > Leader Board</Card.Title>
+                <Card.Title className='pb-2'> Leader Board</Card.Title>
                 <Table striped bordered hover>
                     <thead>
                         <tr>
@@ -20,6 +20,11 @@ export default function LeaderBoard() {
                             <td>1</td>
                             <td>Mark</td>
                             <td>100</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Jacob</td>
+                            <td>200s</td>
                         </tr>
                         <tr>
                             <td>2</td>
