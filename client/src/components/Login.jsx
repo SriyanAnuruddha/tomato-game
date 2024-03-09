@@ -1,17 +1,49 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import AuthContext from '../context/AuthContext';
 
 export default function Login() {
+    const { authUser, login } = useContext(AuthContext)
+
     const [loginData, setLoginData] = useState({
         username: "",
         password: "",
     })
 
     function handleSubmit(event) {
-        event.preventDefault();
+        event.preventDefault(); //prevent page from refreshing after clicking submit button(login Button)
 
-        // write data submit code here
+        if (!loginData.username || !loginData.password) { // validate form data
+            return alert("enter valid data")
+        } else {
+            (async function () {
+                try {
+                    const response = await fetch('/api/users/login',
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(loginData)
+                        }
+                    )
+
+                    const user = await response.json();
+                    login(user)// set user context state
+                } catch (e) {
+                    return console.log(e)
+                }
+            })();
+        }
+
+        // clear from data
+        setLoginData(
+            {
+                username: "",
+                password: "",
+            }
+        )
     }
 
     function onClickHandler(event) {

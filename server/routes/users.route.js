@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
         } else {
             const accessToken = createTokens(user) // create the JWT token for the user
             res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }) // this will create cookie in clients browswer(maxAge is expriation time for the cookie)
-            res.json({ message: "Login successful" });
+            res.json({ username: user.username, email: user.email, isAuthenticated: true });
         }
     })
 });
@@ -64,7 +64,8 @@ router.post("/login", async (req, res) => {
 router.get("/authenticate", validateToken, (req, res) => {
     res.json({
         username: req.username,
-        email: req.email
+        email: req.email,
+        isAuthenticated: req.authenticated
     })
 })
 
