@@ -17,7 +17,6 @@ export default function NavigationBar() {
             try {
                 const response = await fetch('/api/users/logout')
                 const message = await response.json();
-                console.log(message)
             } catch (e) {
                 console.log("can't logout")
             }

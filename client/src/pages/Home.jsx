@@ -11,23 +11,23 @@ import AuthContext from "../context/AuthContext";
 
 
 export default function Home() {
-    const [showAlert, setShowAlert] = useState(true);
-
-    const { authUser } = useContext(AuthContext)
+    const { authUser, isNewLogin, isAlreadyLogin, isNewUser } = useContext(AuthContext)
+    const [message, setMessage] = useState("empty")
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowAlert(false);
-        }, 5000); // close Alert after 5 seconds 
-
-        return () => clearTimeout(timer);
-    }, []);
-
+        if (isNewUser) {
+            setMessage("You have successfully signed up!")
+        } else if (isNewLogin) {
+            setMessage("You have successfully logged in!")
+        } else if (isAlreadyLogin) {
+            setMessage(`Welcome, ${authUser.username}`)
+        }
+    }, [authUser, isNewLogin, isAlreadyLogin, isNewUser])
 
     return (
         <div>
             <NavigationBar />
-            {showAlert && authUser.isAuthenticated && <Alert variant="success" >Welcome, {authUser.username}! </Alert >}
+            {authUser.isAuthenticated && <Alert variant="success" > {message}</Alert >}
             <div className="p-5 container">
                 <div className="row">
                     <div className="col-sm">

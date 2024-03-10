@@ -26,7 +26,9 @@ router.post("/register", (req, res) => {
             password: hash,
             email: email
         }).then(() => {
-            res.send("user registerd")
+            const accessToken = createTokens({ username: username, email: email }) // create the JWT token for the user
+            res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }) // this will create cookie in clients browswer(maxAge is expriation time for the cookie)
+            res.json({ username: username, email: email, isAuthenticated: true });
         }).catch((err) => {
             if (err) {
                 res.status(400).json({ error: err })
@@ -85,5 +87,21 @@ router.get("/", async (req, res) => {
 
 });
 
+router.delete('/:username', async (req, res) => {
+    const username = req.params.username
+
+    try {
+        const result = await User.destroy({
+            where: {
+                username: username
+            }
+        })
+
+        res.send("users successfully deleted!")
+    } catch (e) {
+        res.send("cant delete that user!")
+    }
+
+})
 
 module.exports = router;
