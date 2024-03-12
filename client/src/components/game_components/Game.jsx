@@ -1,4 +1,3 @@
-import tomatoGame from "../assets/tomatoGame.png"
 import Image from 'react-bootstrap/Image';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -7,15 +6,17 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Confetti from 'react-confetti'
 import { useEffect, useState } from "react";
-
+import GameWonModal from './GameWonModal';
+import GameOverModal from './GameOverModal'
 
 export default function Game() {
     const [level, setLevel] = useState(1)
-    const [timeRemaining, setTimeRemaining] = useState(0);
-    const [levelTime, setLevelTime] = useState(180)
-    const [isGameOver, setIsGameOver] = useState(false)
+    const [timeRemaining, setTimeRemaining] = useState(180);
+    const [isTimeOver, setIsTimeOver] = useState(false)
     const [isGameWon, setIsGameWon] = useState(false)
     const [playerAnswer, setPlayerAnswer] = useState(null)
+    const [currentScore, setCurrentScore] = useState(0)
+    const [finishedTime, setFinishedTime] = useState(0)
 
     const [gameObj, setGameObj] = useState({
         question: '',
@@ -38,12 +39,12 @@ export default function Game() {
     }, [level])
 
     useEffect(() => {
-        setTimeRemaining(levelTime);
         const intervalId = setInterval(() => {
             setTimeRemaining(prevTime => {
                 // If time remaining is already 0, clear the interval
                 if (prevTime === 0) {
                     clearInterval(intervalId);
+                    setIsTimeOver(true)
                     return 0;
                 }
                 // Otherwise, decrement the time remaining
@@ -58,33 +59,50 @@ export default function Game() {
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
 
-    function newLevel() {
-        setLevelTime(prevTime => prevTime - 20) // reduce 30seconds from time in each level
+    useEffect(() => {
+        console.log(finishedTime); // Log the finished time whenever it changes
+    }, [finishedTime]);
+
+    function newlevel() {
         setLevel(prevLevel => prevLevel + 1)
+        setIsGameWon(false)
+        setTimeRemaining(180)
     }
 
     function checkAnswer() {
-        if (playerAnswer == gameObj.solution) {
+        if (playerAnswer == gameObj.solution) { // check if player won the game
             setIsGameWon(true)
-            newLevel()
+            setFinishedTime(timeRemaining)
         }
     }
+
+    useEffect(() => {
+        if (finishedTime > 120 && finishedTime <= 180) {
+            setCurrentScore(prevScore => prevScore + 100)
+        } else if (finishedTime > 60 && finishedTime <= 120) {
+            setCurrentScore(prevScore => prevScore + 50)
+        } else if (finishedTime > 0 && finishedTime <= 60) {
+            setCurrentScore(prevScore => prevScore + 25)
+        }
+    }, [finishedTime])
 
     return (
         <div className="container p-5">
             {isGameWon && <Confetti />}
+            <GameOverModal show={isTimeOver} onHide={() => setIsTimeOver(false)} />
+            <GameWonModal gameInfo={{ finishTime: finishedTime, score: currentScore, }} newLevel={newlevel} show={isGameWon} onHide={() => setIsGameWon(false)} />
             <div className="row">
                 <div className="col border">
-                    Level 1
+                    Level {level}
                 </div>
                 <div className="col border">
-                    Score: 100
+                    Score: {currentScore}
                 </div>
                 <div className="col-5 border">
 
                 </div>
                 <div className="col border">
-                    Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+                    {!isGameWon && <span>Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}
                 </div>
             </div>
 

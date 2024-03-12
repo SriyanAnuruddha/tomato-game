@@ -2,7 +2,6 @@ import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import AuthContext from '../context/AuthContext';
-import VerticalModal from './VerticalModal'
 
 export default function Login() {
     const { authUser, login, newLogin } = useContext(AuthContext)
@@ -47,7 +46,6 @@ export default function Login() {
             }
         )
 
-
     }
 
     function onClickHandler(event) {
@@ -77,7 +75,6 @@ export default function Login() {
                 Login
             </Button>
 
-            {/* <VerticalModal message={"Login Succesful!"} show={showModal} onHide={() => setShowModal(false)} /> */}
         </Form>
     )
 }

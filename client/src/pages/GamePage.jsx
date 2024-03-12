@@ -1,5 +1,5 @@
 import NavigationBar from "../components/NavigationBar"
-import Game from "../components/Game"
+import Game from "../components/game_components/Game"
 
 export default function GamePage() {
     return (
