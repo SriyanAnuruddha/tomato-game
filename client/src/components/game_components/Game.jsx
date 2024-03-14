@@ -60,8 +60,22 @@ export default function Game() {
     const seconds = timeRemaining % 60;
 
     useEffect(() => {
-        console.log(finishedTime); // Log the finished time whenever it changes
-    }, [finishedTime]);
+        (async () => {
+            try {
+                const response = await fetch('/api/users/store-score',
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ score: currentScore })
+                    }
+                )
+            } catch (e) {
+                console.log(e)
+            }
+        })()
+    }, [currentScore]);
 
     function newlevel() {
         setLevel(prevLevel => prevLevel + 1)

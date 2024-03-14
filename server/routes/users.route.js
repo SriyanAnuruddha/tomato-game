@@ -104,4 +104,41 @@ router.delete('/:username', async (req, res) => {
 
 })
 
+router.post('/store-score', validateToken, async (req, res) => {
+    const { score } = req.body;
+
+    try {
+        // find player's details
+        const user = await User.findOne({ where: { username: req.username } });
+
+        if (score > user.highestScore) { // update the highest score in the table 
+            user.highestScore = score;
+            await user.save()
+            return res.send("updated score")
+        }
+        return res.sendStatus(200)
+
+    } catch (e) {
+        console.log(e)
+        return res.send("can't update score server error!")
+    }
+})
+
+
+router.get('/get-scores', async (req, res) => {
+    try {
+        const result = await User.findAll({
+            order: [
+                ['highestScore', 'DESC'],
+            ],
+            attributes: ['username', 'highestScore']
+        })
+
+        res.send(result)
+    } catch (e) {
+        console.log(e)
+        res.sendStatus(404).send("internal server error")
+    }
+})
+
 module.exports = router;
