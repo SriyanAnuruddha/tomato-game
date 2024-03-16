@@ -2,8 +2,20 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Link } from "react-router-dom";
 import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card';
+import { useEffect, useState } from 'react';
 
 export default function GameWonModal(props) {
+    const [quoteObj, setQuoteObj] = useState({})
+
+    useEffect(() => {
+        (async () => {
+            const response = await fetch("/api/game/quote")
+            const quote = await response.json();
+            setQuoteObj(quote)
+        })()
+    }, [props.gameInfo.finishedLevel])
+
     return (
         <Modal
             {...props}
@@ -16,15 +28,21 @@ export default function GameWonModal(props) {
                 <h1 className='p-4'>You Win!</h1>
                 <div className='px-5'>
                     <ListGroup as="ol" >
+                        <ListGroup.Item as="li" className='bg-warning'>Finished Level :{props.gameInfo.finishedLevel}</ListGroup.Item>
                         <ListGroup.Item as="li" className='bg-warning'>Finished Time {Math.floor(props.gameInfo.finishTime / 60)}:{props.gameInfo.finishTime % 60}</ListGroup.Item>
                         <ListGroup.Item as="li" className='bg-warning'>Current Score :{props.gameInfo.score}</ListGroup.Item>
-
                     </ListGroup>
+                    <Card >
+                        <Card.Body>
+                            <Card.Title>" {quoteObj.quote} "</Card.Title>
+                            <Card.Subtitle className="mb-2 text-muted my-auto">- {quoteObj.person}</Card.Subtitle>
+                        </Card.Body>
+                    </Card>
                 </div>
             </Modal.Body>
             <Modal.Footer className='d-flex justify-content-center'>
-                <Button onClick={props.newLevel}>Next Level  <i className="bi bi-fast-forward-circle p-1"></i></Button>
-                <Button className='btn-danger' onClick={props.onHide}><Link className='remove_link_default' to='/'>Quit Game</Link><i className="bi bi-escape p-1"></i></Button>
+                <Button onClick={props.newLevel}>Next Level  <i className="bi bi-fast-forward-circle  p-1"></i></Button>
+                <Button className='btn-danger' onClick={props.onHide}><Link className='remove_link_default' to='/'>Quit Game</Link><i className="bi bi-house p-1"></i></Button>
             </Modal.Footer>
         </Modal>
     );

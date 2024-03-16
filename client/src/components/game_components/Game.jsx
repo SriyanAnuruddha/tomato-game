@@ -14,9 +14,10 @@ export default function Game() {
     const [timeRemaining, setTimeRemaining] = useState(180);
     const [isTimeOver, setIsTimeOver] = useState(false)
     const [isGameWon, setIsGameWon] = useState(false)
-    const [playerAnswer, setPlayerAnswer] = useState(null)
+    const [playerAnswer, setPlayerAnswer] = useState('')
     const [currentScore, setCurrentScore] = useState(0)
     const [finishedTime, setFinishedTime] = useState(0)
+
 
     const [gameObj, setGameObj] = useState({
         question: '',
@@ -87,6 +88,7 @@ export default function Game() {
         if (playerAnswer == gameObj.solution) { // check if player won the game
             setIsGameWon(true)
             setFinishedTime(timeRemaining)
+            setPlayerAnswer("")
         }
     }
 
@@ -104,7 +106,7 @@ export default function Game() {
         <div className="container p-5">
             {isGameWon && <Confetti />}
             <GameOverModal show={isTimeOver} onHide={() => setIsTimeOver(false)} />
-            <GameWonModal gameInfo={{ finishTime: finishedTime, score: currentScore, }} newLevel={newlevel} show={isGameWon} onHide={() => setIsGameWon(false)} />
+            <GameWonModal gameInfo={{ finishTime: finishedTime, score: currentScore, finishedLevel: level }} newLevel={newlevel} show={isGameWon} onHide={() => setIsGameWon(false)} />
             <div className="row">
                 <div className="col border">
                     Level {level}
@@ -129,7 +131,7 @@ export default function Game() {
             <div className="row border">
                 <div className="col input-group  d-flex  justify-content-center">
                     <div className="w-25 m-2">
-                        <input onChange={(event) => setPlayerAnswer(event.target.value)} type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
+                        <input value={playerAnswer} onChange={(event) => setPlayerAnswer(event.target.value)} type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
                     </div>
                     <div className="input-group-prepend ">
                         <button onClick={checkAnswer} className="btn btn-primary m-2" type="button">Button</button>

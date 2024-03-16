@@ -2,9 +2,11 @@ import { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import AuthContext from '../context/AuthContext'
+import Alert from 'react-bootstrap/Alert';
 
 export default function SingUp() {
     const { login, newUser } = useContext(AuthContext)
+    const [error, setError] = useState({ showError: false, message: "" })
 
     const [signUpData, setSignUpData] = useState({
         username: "",
@@ -37,8 +39,22 @@ export default function SingUp() {
                         )
 
                         const user = await response.json();
-                        login(user)// set user context state
-                        newUser()
+
+                        if (user.isAuthenticated) { // check use successfully signup
+                            login(user)// set user context state
+                            newUser()
+                            setSignUpData({
+                                username: "",
+                                email: "",
+                                password: "",
+                                confirmPassword: ""
+                            })
+                        } else {
+                            setError(prev => {
+                                return { ...prev, showError: true, message: user.error }
+                            })
+                        }
+
                     } catch (e) {
                         return console.log(e)
                     }
@@ -60,6 +76,7 @@ export default function SingUp() {
 
     return (
         <Form onSubmit={handleSubmit} className='p-2'>
+            {error.showError && <Alert variant="danger"> {error.message}</Alert>}
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control required onChange={onClickHandler} name='username' value={signUpData.username} type="text" placeholder="Enter Username" />

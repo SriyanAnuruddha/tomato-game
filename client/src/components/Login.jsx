@@ -2,10 +2,11 @@ import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import AuthContext from '../context/AuthContext';
+import Alert from 'react-bootstrap/Alert';
 
 export default function Login() {
     const { authUser, login, newLogin } = useContext(AuthContext)
-    const [showModal, setShowModal] = useState(false)
+    const [error, setError] = useState({ showError: false, message: "" })
 
     const [loginData, setLoginData] = useState({
         username: "",
@@ -30,21 +31,20 @@ export default function Login() {
                     )
 
                     const user = await response.json();
-                    login(user)// set user context state
-                    newLogin() // set new user login
+                    if (user.isAuthenticated) {
+                        login(user)// set user context state
+                        newLogin() // set new user login
+                        setLoginData(prevData => { return { ...prevData, username: "", password: "" } })
+                    } else {
+                        setError(prev => {
+                            return { ...prev, showError: true, message: user.error }
+                        })
+                    }
                 } catch (e) {
-                    return console.log(e)
+                    console.log(e)
                 }
             })();
         }
-
-        // clear from data
-        setLoginData(
-            {
-                username: "",
-                password: "",
-            }
-        )
 
     }
 
@@ -61,6 +61,7 @@ export default function Login() {
 
     return (
         <Form className='p-2' onSubmit={handleSubmit}>
+            {error.showError && <Alert variant="danger"> {error.message}</Alert>}
             <Form.Group className="mb-3" controlId="LoginformBasicUsername">
                 <Form.Label>Username</Form.Label>
                 <Form.Control required onChange={onClickHandler} name='username' value={loginData.username} type="text" placeholder="Enter Username" />

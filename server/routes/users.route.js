@@ -15,27 +15,33 @@ const { createTokens, validateToken } = require("../middlewares/JWT")
 // create user authentication
 
 // handle user registration
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
     const { username, password, email, ...rest } = req.body;
-    //pass the password you want to hash into hash function
-    bcrypt.hash(password, 10).then((hash) => {
+    try {
+        const hash = await bcrypt.hash(password, 10);
 
-        // store user details in the database
-        User.create({
+        const existingUsername = await User.findOne({ where: { username: username } });
+        if (existingUsername) {
+            throw { message: "Username already exists!" };
+        }
+
+        const existingEmail = await User.findOne({ where: { email: email } });
+        if (existingEmail) { // check if user name already stored
+            throw { message: "You already have an account!" };
+        }
+        await User.create({
             username: username,
             password: hash,
             email: email
-        }).then(() => {
-            const accessToken = createTokens({ username: username, email: email }) // create the JWT token for the user
-            res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }) // this will create cookie in clients browswer(maxAge is expriation time for the cookie)
-            res.json({ username: username, email: email, isAuthenticated: true });
-        }).catch((err) => {
-            if (err) {
-                res.status(400).json({ error: err })
-            }
-        })
-    })
-})
+        });
+
+        const accessToken = createTokens({ username: username, email: email });
+        res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 });
+        res.json({ username: username, email: email, isAuthenticated: true });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
 
 
 // handle user login
@@ -46,14 +52,14 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ where: { username: username } });
 
     if (!user) {
-        return res.status(400).json({ error: "username is wrong!" })
+        return res.status(400).json({ error: "username or password is wrong!" })
     }
 
     const dbPassword = user.password;
     bcrypt.compare(password, dbPassword).then((match) => {
         if (!match)// if password do not match this will be false
         {
-            res.status(400).json({ error: " password is wrong!" })
+            res.status(400).json({ error: "username or password is wrong!" })
         } else {
             const accessToken = createTokens(user) // create the JWT token for the user
             res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }) // this will create cookie in clients browswer(maxAge is expriation time for the cookie)
