@@ -9,7 +9,6 @@ import Alert from 'react-bootstrap/Alert';
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../context/AuthContext";
 
-
 export default function Home() {
     const { authUser, isNewLogin, isAlreadyLogin, isNewUser } = useContext(AuthContext)
     const [message, setMessage] = useState("empty")
@@ -27,18 +26,18 @@ export default function Home() {
     return (
         <div>
             <NavigationBar />
-            {authUser.isAuthenticated && <Alert variant="success" > {message}</Alert >}
+            {authUser.isAuthenticated && <Alert variant="success" className=" mx-1"> {message}</Alert >}
             <div className="p-5 container">
                 <div className="row">
-                    <div className="col-sm">
+                    <div className="col-md">
                         <LeaderBoard />
                     </div>
-                    <div className="col-sm d-flex justify-content-center">
+                    <div className="col-md d-flex justify-content-center">
                         <PlayGameButton />
                     </div>
                     {
                         !authUser.isAuthenticated &&
-                        <div className="col-sm">
+                        <div className="col-md">
                             <TabPanel />
                         </div>
                     }

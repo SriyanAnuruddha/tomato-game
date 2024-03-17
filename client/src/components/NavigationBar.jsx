@@ -24,12 +24,12 @@ export default function NavigationBar() {
     }
 
     return (
-        <Navbar bg="primary" data-bs-theme="light">
+        <Navbar className='shadow p-3 bg-primary' data-bs-theme="dark">
             <Container>
-                <Navbar.Brand as={Link} to='/'>TomatoQuest</Navbar.Brand>
+                <Navbar.Brand as={Link} to='/' >TomatoQuest</Navbar.Brand>
                 <Nav >
                     {authUser.isAuthenticated && <NavDropdown title={authUser.username} id="navbarScrollingDropdown" >
-                        <NavDropdown.Item as={Link} to='/profile'>
+                        <NavDropdown.Item as={Link} to='/profile' >
                             View Profile
                         </NavDropdown.Item>
                         <NavDropdown.Divider />

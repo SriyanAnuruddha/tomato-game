@@ -4,11 +4,20 @@ import Home from './pages/Home'
 import UserProfile from './pages/UserProfile';
 import GamePage from './pages/GamePage';
 import AuthContext from './context/AuthContext'
-import { createContext, useContext } from 'react';
+import PrivateRoute from './components/PrivateRoute';
+import image from './assets/images/backgroundImage.jpg'
+
+
 
 
 export default function App() {
-    const { authUser } = useContext(AuthContext)
+
+    const styles = {
+
+        backgroundSize: "cover",
+        height: "100vh",
+        backgroundImage: `url(${image})`
+    }
 
     const router = createBrowserRouter([
         {
@@ -16,16 +25,18 @@ export default function App() {
             element: <Home />
         },
         {
-            path: '/profile',
-            element: authUser.isAuthenticated ? <UserProfile /> : <Home />
-        },
-        {
-            path: '/game',
-            element: authUser.isAuthenticated ? <GamePage /> : <Home />
+            element: <PrivateRoute />, // Nest private routes under this element
+            children: [
+                { path: 'profile', element: <UserProfile /> },
+                { path: 'game', element: <GamePage /> }
+            ]
         }
-    ])
+    ]);
 
     return (
-        <RouterProvider router={router} />
+        <div style={styles}>
+            <RouterProvider router={router} />
+        </div>
+
     )
 }

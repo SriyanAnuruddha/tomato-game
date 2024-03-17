@@ -2,14 +2,15 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Login from './Login';
 import SingUp from './SignUp';
+import Card from 'react-bootstrap/Card';
 
 export default function TabPanel() {
     return (
-        <div className='mx-3 border rounded'>
+        <Card className='mx-3 border rounded'>
             <Tabs
                 defaultActiveKey="Login"
                 id="fill-tab-example"
-                className="mb-3 "
+                className="mb-3"
                 fill
             >
                 <Tab eventKey="Login" title="Login">
@@ -19,6 +20,6 @@ export default function TabPanel() {
                     <SingUp />
                 </Tab>
             </Tabs>
-        </div>
+        </Card>
     )
 }

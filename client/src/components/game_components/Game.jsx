@@ -8,6 +8,9 @@ import Confetti from 'react-confetti'
 import { useEffect, useState } from "react";
 import GameWonModal from './GameWonModal';
 import GameOverModal from './GameOverModal'
+import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
+
 
 export default function Game() {
     const [level, setLevel] = useState(1)
@@ -17,7 +20,7 @@ export default function Game() {
     const [playerAnswer, setPlayerAnswer] = useState('')
     const [currentScore, setCurrentScore] = useState(0)
     const [finishedTime, setFinishedTime] = useState(0)
-
+    const [showAnswerWrong, setShowAnswerWrong] = useState(false)
 
     const [gameObj, setGameObj] = useState({
         question: '',
@@ -78,19 +81,6 @@ export default function Game() {
         })()
     }, [currentScore]);
 
-    function newlevel() {
-        setLevel(prevLevel => prevLevel + 1)
-        setIsGameWon(false)
-        setTimeRemaining(180)
-    }
-
-    function checkAnswer() {
-        if (playerAnswer == gameObj.solution) { // check if player won the game
-            setIsGameWon(true)
-            setFinishedTime(timeRemaining)
-            setPlayerAnswer("")
-        }
-    }
 
     useEffect(() => {
         if (finishedTime > 120 && finishedTime <= 180) {
@@ -102,8 +92,31 @@ export default function Game() {
         }
     }, [finishedTime])
 
+
+    function newlevel() {
+        setLevel(prevLevel => prevLevel + 1)
+        setIsGameWon(false)
+        setTimeRemaining(180)
+    }
+
+    function checkAnswer() {
+        if (playerAnswer == gameObj.solution) { // check if player won the game
+            setIsGameWon(true)
+            setFinishedTime(timeRemaining)
+            setPlayerAnswer("")
+        } else {
+            setShowAnswerWrong(true)
+        }
+    }
+
+    function onChangeHandler(event) {
+        setPlayerAnswer(event.target.value)
+        setShowAnswerWrong(false)
+    }
+
     return (
         <div className="container p-5">
+            {showAnswerWrong && <Alert variant="danger" >Your Answer is Wrong!</Alert >}
             {isGameWon && <Confetti />}
             <GameOverModal show={isTimeOver} onHide={() => setIsTimeOver(false)} />
             <GameWonModal gameInfo={{ finishTime: finishedTime, score: currentScore, finishedLevel: level }} newLevel={newlevel} show={isGameWon} onHide={() => setIsGameWon(false)} />
@@ -124,14 +137,19 @@ export default function Game() {
 
             <div className="row border">
                 <div className="col  d-flex justify-content-center">
-                    <Image className="rounded  d-block" src={gameObj.question && gameObj.question} rounded />
+                    {
+                        (gameObj.question) ?
+                            <Image className="rounded  d-block" src={gameObj.question && gameObj.question} rounded />
+                            : <Spinner className='text-light' animation="border" />
+                    }
+
                 </div>
             </div>
 
             <div className="row border">
                 <div className="col input-group  d-flex  justify-content-center">
                     <div className="w-25 m-2">
-                        <input value={playerAnswer} onChange={(event) => setPlayerAnswer(event.target.value)} type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
+                        <input value={playerAnswer} onChange={onChangeHandler} type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
                     </div>
                     <div className="input-group-prepend ">
                         <button onClick={checkAnswer} className="btn btn-primary m-2" type="button">Button</button>

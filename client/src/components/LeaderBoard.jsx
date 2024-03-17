@@ -31,10 +31,10 @@ export default function LeaderBoard() {
 
 
     return (
-        <Card className='bg-secondary' >
+        <Card id='custom-bg' className='shadow ' >
             <Card.Body className='d-flex flex-column  justify-content-start align-items-center'>
-                <Card.Title className='pb-2'> Leader Board</Card.Title>
-                <Table striped bordered hover>
+                <Card.Title className='pb-2 text-dark'> <h3>Leader Board</h3></Card.Title>
+                <Table bordered hover >
                     <thead>
                         <tr>
                             <th>#</th>
