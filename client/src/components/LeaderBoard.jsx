@@ -16,9 +16,9 @@ export default function LeaderBoard() {
 
                 setScoreElements(userScores.map((user, i) => {
                     return <tr key={i}>
-                        <td>{i + 1}</td>
-                        <td>{user.username}</td>
-                        <td>{user.highestScore}</td>
+                        <td id='custom-bg'>{i + 1}</td>
+                        <td id='custom-bg'>{user.username}</td>
+                        <td id='custom-bg'>{user.highestScore}</td>
                     </tr>
                 }))
 
@@ -31,21 +31,22 @@ export default function LeaderBoard() {
 
 
     return (
-        <Card id='custom-bg' className='shadow ' >
+        <Card className='shadow' >
             <Card.Body className='d-flex flex-column  justify-content-start align-items-center'>
+
                 <Card.Title className='pb-2 text-dark'> <h3>Leader Board</h3></Card.Title>
-                <Table bordered hover >
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Player Name</th>
-                            <th>Highest Score</th>
+                <table id='custom-bg' className='table table-bordered ' >
+                    <thead >
+                        <tr >
+                            <th id='custom-bg'>#</th>
+                            <th id='custom-bg'>Player Name</th>
+                            <th id='custom-bg'>Highest Score</th>
                         </tr>
                     </thead>
                     <tbody>
                         {scoreElements}
                     </tbody>
-                </Table>
+                </table>
             </Card.Body>
 
         </Card>

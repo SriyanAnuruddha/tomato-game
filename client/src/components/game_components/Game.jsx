@@ -29,7 +29,14 @@ export default function Game() {
 
 
     useEffect(() => {
+
+
         (async () => {
+            setGameObj({
+                question: '',
+                solution: ''
+            })
+
             try {
                 const response = await fetch('/api/game/newgame')
                 const gameData = await response.json()
@@ -115,28 +122,30 @@ export default function Game() {
     }
 
     return (
-        <div className="container p-5">
-            {showAnswerWrong && <Alert variant="danger" >Your Answer is Wrong!</Alert >}
+        <div id='custom-bg' className="container my-5">
+
             {isGameWon && <Confetti />}
             <GameOverModal show={isTimeOver} onHide={() => setIsTimeOver(false)} />
             <GameWonModal gameInfo={{ finishTime: finishedTime, score: currentScore, finishedLevel: level }} newLevel={newlevel} show={isGameWon} onHide={() => setIsGameWon(false)} />
-            <div className="row">
-                <div className="col border">
-                    Level {level}
+
+            <div className="row text-center">
+                <div className="col border text-dark">
+                    <h3 className='py-1'>Level {level}</h3>
                 </div>
-                <div className="col border">
-                    Score: {currentScore}
+                <div className="col border text-dark">
+                    <h3 className='py-1'>Score: {currentScore}</h3>
                 </div>
                 <div className="col-5 border">
 
                 </div>
-                <div className="col border">
-                    {!isGameWon && <span>Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}
+                <div className="col border text-dark">
+                    <h3 className='py-1'>{!isGameWon && <span>Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}</h3>
                 </div>
             </div>
 
             <div className="row border">
-                <div className="col  d-flex justify-content-center">
+                <div className="col  d-flex flex-column justify-content-center align-items-center">
+                    {showAnswerWrong && <Alert variant="danger" className='my-1  w-50'>Your Answer is Wrong!</Alert >}
                     {
                         (gameObj.question) ?
                             <Image className="rounded  d-block" src={gameObj.question && gameObj.question} rounded />
