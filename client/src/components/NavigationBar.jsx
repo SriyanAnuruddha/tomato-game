@@ -29,11 +29,7 @@ export default function NavigationBar() {
                 <Navbar.Brand as={Link} to='/' >TomatoQuest</Navbar.Brand>
                 <Nav >
                     {authUser.isAuthenticated && <NavDropdown title={authUser.username} id="navbarScrollingDropdown" >
-                        <NavDropdown.Item as={Link} to='/profile' >
-                            View Profile
-                        </NavDropdown.Item>
-                        <NavDropdown.Divider />
-                        <NavDropdown.Item onClick={handleLogout}>
+                        <NavDropdown.Item className='text-danger' onClick={handleLogout}>
                             Logout
                         </NavDropdown.Item>
                     </NavDropdown>}

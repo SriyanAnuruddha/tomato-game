@@ -56,6 +56,8 @@ export default function Login() {
                 [name]: value
             }
         })
+
+        setError({ showError: false, message: "" })
     }
 
 
