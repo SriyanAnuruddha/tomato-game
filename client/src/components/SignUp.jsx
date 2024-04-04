@@ -5,7 +5,7 @@ import AuthContext from '../context/AuthContext'
 import Alert from 'react-bootstrap/Alert';
 
 export default function SingUp() {
-    const { login, newUser } = useContext(AuthContext)
+    const { login, changeAuthType } = useContext(AuthContext)
     const [error, setError] = useState({ showError: false, message: "" })
 
     const [signUpData, setSignUpData] = useState({
@@ -42,7 +42,7 @@ export default function SingUp() {
 
                         if (user.isAuthenticated) { // check use successfully signup
                             login(user)// set user context state
-                            newUser()
+                            changeAuthType(3)
                             setSignUpData({
                                 username: "",
                                 email: "",

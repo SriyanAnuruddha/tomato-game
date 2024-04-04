@@ -5,7 +5,7 @@ import AuthContext from '../context/AuthContext';
 import Alert from 'react-bootstrap/Alert';
 
 export default function Login() {
-    const { authUser, login, newLogin } = useContext(AuthContext)
+    const {login, changeAuthType } = useContext(AuthContext)
     const [error, setError] = useState({ showError: false, message: "" })
 
     // stores username and password
@@ -34,7 +34,7 @@ export default function Login() {
                     const user = await response.json();
                     if (user.isAuthenticated) {
                         login(user)// set user context state
-                        newLogin() // set new user login
+                        changeAuthType(2)
                         setLoginData(prevData => { return { ...prevData, username: "", password: "" } }) // reset the form values
                     } else {
                         setError(prev => {

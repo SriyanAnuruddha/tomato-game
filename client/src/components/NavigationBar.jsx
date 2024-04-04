@@ -7,11 +7,11 @@ import AuthContext from '../context/AuthContext'
 import { useContext } from 'react';
 
 export default function NavigationBar() {
-    const { authUser, logout } = useContext(AuthContext)
+    const { authUser, logout,changeAuthType } = useContext(AuthContext)
 
     function handleLogout(event) {
+        changeAuthType(0)
         logout(); // reset login context
-
         // clear the token from cookies after logging out
         (async () => {
             try {
