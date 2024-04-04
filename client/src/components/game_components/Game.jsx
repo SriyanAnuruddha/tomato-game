@@ -161,7 +161,7 @@ export default function Game() {
                         <input value={playerAnswer} onChange={onChangeHandler} type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
                     </div>
                     <div className="input-group-prepend ">
-                        <button onClick={checkAnswer} className="btn btn-primary m-2" type="button">Button</button>
+                        <button onClick={checkAnswer} className="btn btn-primary m-2" type="button">Check Answer</button>
                     </div>
                 </div>
             </div>
