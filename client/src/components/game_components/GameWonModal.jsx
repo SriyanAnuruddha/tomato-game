@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 export default function GameWonModal(props) {
     const [quoteObj, setQuoteObj] = useState({})
 
+    // request a quote from back-end server
     useEffect(() => {
         (async () => {
             const response = await fetch("/api/game/quote")
@@ -28,9 +29,9 @@ export default function GameWonModal(props) {
                 <h1 className='p-4'>You Win!</h1>
                 <div className='px-5'>
                     <ListGroup as="ol" >
-                        <ListGroup.Item as="li" className='bg-warning'>Finished Level :{props.gameInfo.finishedLevel}</ListGroup.Item>
-                        <ListGroup.Item as="li" className='bg-warning'>Finished Time {Math.floor(props.gameInfo.finishTime / 60)}:{props.gameInfo.finishTime % 60}</ListGroup.Item>
-                        <ListGroup.Item as="li" className='bg-warning'>Current Score :{props.gameInfo.score}</ListGroup.Item>
+                        <ListGroup.Item as="li" className='bg-warning'>Completed Level {props.gameInfo.finishedLevel}</ListGroup.Item>
+                        <ListGroup.Item as="li" className='bg-warning'>Completed Time {Math.floor(props.gameInfo.finishTime / 60)}:{props.gameInfo.finishTime % 60}</ListGroup.Item>
+                        <ListGroup.Item as="li" className='bg-warning'>Current Score {props.gameInfo.score}</ListGroup.Item>
                     </ListGroup>
                     <Card >
                         <Card.Body>

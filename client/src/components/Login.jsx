@@ -8,16 +8,17 @@ export default function Login() {
     const { authUser, login, newLogin } = useContext(AuthContext)
     const [error, setError] = useState({ showError: false, message: "" })
 
+    // stores username and password
     const [loginData, setLoginData] = useState({
         username: "",
         password: "",
     })
 
     function handleSubmit(event) {
-        event.preventDefault(); //prevent page from refreshing after clicking submit button(login Button)
+        event.preventDefault(); // prevent page from refreshing after clicking submit button(login Button)
 
 
-        if (loginData.username && loginData.password) { // validate form data
+        if (loginData.username && loginData.password) { // Checks if the user has entered a username and password
             (async function () {
                 try {
                     const response = await fetch('/api/users/login',
@@ -34,7 +35,7 @@ export default function Login() {
                     if (user.isAuthenticated) {
                         login(user)// set user context state
                         newLogin() // set new user login
-                        setLoginData(prevData => { return { ...prevData, username: "", password: "" } })
+                        setLoginData(prevData => { return { ...prevData, username: "", password: "" } }) // reset the form values
                     } else {
                         setError(prev => {
                             return { ...prev, showError: true, message: user.error }
@@ -48,6 +49,7 @@ export default function Login() {
 
     }
 
+    // Get the form data and update the state
     function onClickHandler(event) {
         const { name, value } = event.target
         setLoginData(prevLoginData => {

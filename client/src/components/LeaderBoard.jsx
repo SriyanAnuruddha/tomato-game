@@ -7,6 +7,7 @@ export default function LeaderBoard() {
     const [userScores, setUserScores] = useState([])
     const [scoreElements, setScoreElements] = useState(null)
 
+    // requests scores of the players from back-end server
     useEffect(() => {
         (async () => {
             try {

@@ -12,6 +12,7 @@ export default function PlayGameButton() {
     const [showAlert, setShowAlert] = useState(false)
     const { authUser } = useContext(AuthContext)
 
+    // Show an alert if the user is not authenticated (logged in)
     useEffect(() => {
         if (authUser.isAuthenticated) {
             setShowAlert(false)
@@ -19,6 +20,7 @@ export default function PlayGameButton() {
     }, [authUser.isAuthenticated])
 
 
+    // Prevent the user from accessing the game page if they are not already logged in
     function showError(event) {
         if (!authUser.isAuthenticated) {
             event.preventDefault()

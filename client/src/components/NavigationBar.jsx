@@ -10,9 +10,9 @@ export default function NavigationBar() {
     const { authUser, logout } = useContext(AuthContext)
 
     function handleLogout(event) {
-        logout(); // reset login state in front end
+        logout(); // reset login context
 
-        //logout from backend (clear the Token stored in )
+        // clear the token from cookies after logging out
         (async () => {
             try {
                 const response = await fetch('/api/users/logout')

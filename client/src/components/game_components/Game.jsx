@@ -22,15 +22,14 @@ export default function Game() {
     const [finishedTime, setFinishedTime] = useState(0)
     const [showAnswerWrong, setShowAnswerWrong] = useState(false)
 
+    // Stores the object returned from the Tomato API
     const [gameObj, setGameObj] = useState({
         question: '',
         solution: ''
     })
 
-
+    // Send a request to retrieve a new game when the game is first launched and when a new level is reached
     useEffect(() => {
-
-
         (async () => {
             setGameObj({
                 question: '',
@@ -70,6 +69,7 @@ export default function Game() {
     const minutes = Math.floor(timeRemaining / 60);
     const seconds = timeRemaining % 60;
 
+    // Send a POST request to the backend server to store the current score whenever the score changes
     useEffect(() => {
         (async () => {
             try {
@@ -88,7 +88,7 @@ export default function Game() {
         })()
     }, [currentScore]);
 
-
+    // determines the score based on the finishing time
     useEffect(() => {
         if (finishedTime > 120 && finishedTime <= 180) {
             setCurrentScore(prevScore => prevScore + 100)
@@ -99,13 +99,14 @@ export default function Game() {
         }
     }, [finishedTime])
 
-
+    // create a new level
     function newlevel() {
         setLevel(prevLevel => prevLevel + 1)
         setIsGameWon(false)
         setTimeRemaining(180)
     }
 
+    // check if the answer is correct 
     function checkAnswer() {
         if (playerAnswer == gameObj.solution) { // check if player won the game
             setIsGameWon(true)
@@ -116,6 +117,7 @@ export default function Game() {
         }
     }
 
+    // get player answer
     function onChangeHandler(event) {
         setPlayerAnswer(event.target.value)
         setShowAnswerWrong(false)

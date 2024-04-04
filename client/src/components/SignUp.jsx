@@ -19,7 +19,7 @@ export default function SingUp() {
 
 
     function handleSubmit(event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevents the page from reloading after clicking the submit button
 
         // check password and confirm password is equal
         if (signUpData.password !== signUpData.confirmPassword) {
@@ -64,6 +64,7 @@ export default function SingUp() {
         }
     }
 
+    // Retrieve the signup form data and update the signup state accordingly
     function onClickHandler(event) {
         const { name, value } = event.target
         setSignUpData(prevSignUpData => {
