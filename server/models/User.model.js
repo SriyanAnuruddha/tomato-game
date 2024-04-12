@@ -1,10 +1,11 @@
 const { Model, DataTypes } = require('sequelize')
-//import sequalize instance/object
+// import sequalize instance/object
 const sequelizeObj = require("../configs/DBconfig")
 
-
+// Create a User model by inheriting the Model class
 class User extends Model { }
 
+// Initilize User Model
 User.init({
     username: {
         type: DataTypes.STRING,

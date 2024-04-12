@@ -1,6 +1,7 @@
 // import JWT to create token 
 const { sign, verify } = require("jsonwebtoken")
 
+// Creates a JWT token by taking a user object as a parameter
 const createTokens = (user) => {
     const accessToken = sign(
         { username: user.username, email: user.email }, // needs to pass what we going to store in the token
@@ -10,7 +11,7 @@ const createTokens = (user) => {
     return accessToken;
 }
 
-// this function will check user have JWT token
+// This function will check if the user request has a JWT token
 const validateToken = (req, res, next) => {
     const accessToken = req.cookies["access-token"]
 

@@ -18,25 +18,29 @@ const { createTokens, validateToken } = require("../middlewares/JWT")
 router.post("/register", async (req, res) => {
     const { username, password, email, ...rest } = req.body;
     try {
-        const hash = await bcrypt.hash(password, 10);
+        const hash = await bcrypt.hash(password, 10); // hash the password
 
+        // Check if the username already exists
         const existingUsername = await User.findOne({ where: { username: username } });
         if (existingUsername) {
             throw { message: "Username already exists!" };
         }
 
+        // Check if Email already exists
         const existingEmail = await User.findOne({ where: { email: email } });
         if (existingEmail) { // check if user name already stored
             throw { message: "You already have an account!" };
         }
+
+        // Create new User Object 
         await User.create({
             username: username,
             password: hash,
             email: email
         });
 
-        const accessToken = createTokens({ username: username, email: email });
-        res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 });
+        const accessToken = createTokens({ username: username, email: email }); // Create a new JWT token
+        res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }); // Create a new cookie, store the JWT token in it, and then send the cookie to the front end for storage
         res.json({ username: username, email: email, isAuthenticated: true });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -48,7 +52,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     const { username, password, email } = req.body;
 
-    //check if the user already exists
+    // check if the user already exists
     const user = await User.findOne({ where: { username: username } });
 
     if (!user) {
@@ -56,19 +60,21 @@ router.post("/login", async (req, res) => {
     }
 
     const dbPassword = user.password;
+
+    // Check if password is correct
     bcrypt.compare(password, dbPassword).then((match) => {
         if (!match)// if password do not match this will be false
         {
             res.status(400).json({ error: "username or password is wrong!" })
         } else {
-            const accessToken = createTokens(user) // create the JWT token for the user
-            res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }) // this will create cookie in clients browswer(maxAge is expriation time for the cookie)
+            const accessToken = createTokens(user) // Create the JWT token for the user
+            res.cookie("access-token", accessToken, { maxAge: 60 * 30 * 1000 }) // This will create cookie in clients browswer(maxAge is expriation time for the cookie)
             res.json({ username: user.username, email: user.email, isAuthenticated: true });
         }
     })
 });
 
-// validate user
+// validate user by decoding the JWT token
 router.get("/authenticate", validateToken, (req, res) => {
     res.json({
         username: req.username,
@@ -80,7 +86,7 @@ router.get("/authenticate", validateToken, (req, res) => {
 // handle logut
 router.get("/logout", validateToken, (req, res) => {
     const accessToken = req.cookies["access-token"];
-    res.clearCookie("access-token").json({ message: "Logged out successfully" });
+    res.clearCookie("access-token").json({ message: "Logged out successfully" }); // Removes cookie from the front end
 })
 
 
@@ -93,6 +99,7 @@ router.get("/", async (req, res) => {
 
 });
 
+// Handle Delete user
 router.delete('/:username', async (req, res) => {
     const username = req.params.username
 
@@ -110,6 +117,7 @@ router.delete('/:username', async (req, res) => {
 
 })
 
+// Handle storing the player's score
 router.post('/store-score', validateToken, async (req, res) => {
     const { score } = req.body;
 
@@ -117,7 +125,8 @@ router.post('/store-score', validateToken, async (req, res) => {
         // find player's details
         const user = await User.findOne({ where: { username: req.username } });
 
-        if (score > user.highestScore) { // update the highest score in the table 
+        // Update score if  score in the request is higher than the stored score
+        if (score > user.highestScore) {
             user.highestScore = score;
             await user.save()
             return res.send("updated score")
@@ -130,7 +139,7 @@ router.post('/store-score', validateToken, async (req, res) => {
     }
 })
 
-
+// Returns all the highest scores of all the players
 router.get('/get-scores', async (req, res) => {
     try {
         const result = await User.findAll({

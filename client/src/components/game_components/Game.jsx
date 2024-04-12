@@ -160,7 +160,7 @@ export default function Game() {
             <div className="row border">
                 <div className="col input-group  d-flex  justify-content-center">
                     <div className="w-25 m-2">
-                        <input value={playerAnswer} onChange={onChangeHandler} type="text" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
+                        <input value={playerAnswer} onChange={onChangeHandler} type="number" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
                     </div>
                     <div className="input-group-prepend ">
                         <button onClick={checkAnswer} className="btn btn-primary m-2" type="button">Check Answer</button>

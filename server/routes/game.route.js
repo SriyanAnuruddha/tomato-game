@@ -1,15 +1,14 @@
 const express = require("express")
 const axios = require("axios")
 const router = express.Router();
+const cookieParser = require("cookie-parser")// import cookie-parser to store JWT token in a cookie
 
-// import cookie-parser to store JWT token in a cookie
-const cookieParser = require("cookie-parser")
-router.use(cookieParser()); // this middleware is applied to every request
+router.use(cookieParser()); // cookieParser middleware is applied to every request
 
 // import JWT middleware
 const { validateToken } = require("../middlewares/JWT")
 
-
+// Get a new game object from the Tomato API
 router.get('/newgame', validateToken, async (req, res) => {
     try {
         const response = await axios.get('http://marcconrad.com/uob/tomato/api.php');
@@ -21,7 +20,7 @@ router.get('/newgame', validateToken, async (req, res) => {
     }
 })
 
-
+// Get new Quoate from Zenquotes API
 router.get('/quote', validateToken, async (req, res) => {
     try {
         const quoteResponse = await axios.get("https://zenquotes.io/api/random")
