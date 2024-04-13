@@ -20,7 +20,7 @@ router.get('/newgame', validateToken, async (req, res) => {
     }
 })
 
-// Get new Quoate from Zenquotes API
+// Get a new Quoate from Zenquotes API
 router.get('/quote', validateToken, async (req, res) => {
     try {
         const quoteResponse = await axios.get("https://zenquotes.io/api/random")

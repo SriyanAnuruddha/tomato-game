@@ -147,6 +147,8 @@ export default function Game() {
 
             <div className="row border">
                 <div className="col  d-flex flex-column justify-content-center align-items-center">
+
+                    <h2 className='text-white'>Find the value of tomato</h2>
                     {showAnswerWrong && <Alert variant="danger" className='my-1  w-50'>Your Answer is Wrong!</Alert >}
                     {
                         (gameObj.question) ?
