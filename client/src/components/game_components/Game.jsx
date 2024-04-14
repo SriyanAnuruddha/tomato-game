@@ -21,6 +21,8 @@ export default function Game() {
     const [currentScore, setCurrentScore] = useState(0)
     const [finishedTime, setFinishedTime] = useState(0)
     const [showAnswerWrong, setShowAnswerWrong] = useState(false)
+    const [lives, setLives] = useState(3)
+    const [showTimer, setShowTimer] = useState(true)
 
     // Stores the object returned from the Tomato API
     const [gameObj, setGameObj] = useState({
@@ -28,7 +30,7 @@ export default function Game() {
         solution: ''
     })
 
-    // Send a request to retrieve a new game when the game is first launched and when a new level is reached
+    // Send a request to retrieve a new game when the game is first launched or when a new level is reached
     useEffect(() => {
         (async () => {
             setGameObj({
@@ -97,13 +99,14 @@ export default function Game() {
         } else if (finishedTime > 0 && finishedTime <= 60) {
             setCurrentScore(prevScore => prevScore + 25)
         }
-    }, [finishedTime])
+    }, [finishedTime, level])
 
     // create a new level
     function newlevel() {
         setLevel(prevLevel => prevLevel + 1)
         setIsGameWon(false)
         setTimeRemaining(180)
+        setLives(3)
     }
 
     // check if the answer is correct 
@@ -114,6 +117,8 @@ export default function Game() {
             setPlayerAnswer("")
         } else {
             setShowAnswerWrong(true)
+            setLives(prevLives => prevLives - 1)
+
         }
     }
 
@@ -127,7 +132,7 @@ export default function Game() {
         <div id='custom-bg' className="container my-5">
 
             {isGameWon && <Confetti />}
-            <GameOverModal show={isTimeOver} onHide={() => setIsTimeOver(false)} />
+            <GameOverModal show={isTimeOver || lives == 0} onHide={() => setIsTimeOver(false)} />
             <GameWonModal gameInfo={{ finishTime: finishedTime, score: currentScore, finishedLevel: level }} newLevel={newlevel} show={isGameWon} onHide={() => setIsGameWon(false)} />
 
             <div className="row text-center">
@@ -138,10 +143,10 @@ export default function Game() {
                     <h3 className='py-1'>Score: {currentScore}</h3>
                 </div>
                 <div className="col-5 border">
-
+                    <h3 className='py-1'>Lives: {lives}</h3>
                 </div>
                 <div className="col border text-dark">
-                    <h3 className='py-1'>{!isGameWon && <span>Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}</h3>
+                    <h3 className='py-1'>{(!isGameWon && lives > 0) && <span>Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}</h3>
                 </div>
             </div>
 
