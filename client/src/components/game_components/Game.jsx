@@ -10,19 +10,18 @@ import GameWonModal from './GameWonModal';
 import GameOverModal from './GameOverModal'
 import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
-
+import Die from './Die';
+import { nanoid } from "nanoid";
 
 export default function Game() {
     const [level, setLevel] = useState(1)
     const [timeRemaining, setTimeRemaining] = useState(180);
     const [isTimeOver, setIsTimeOver] = useState(false)
     const [isGameWon, setIsGameWon] = useState(false)
-    const [playerAnswer, setPlayerAnswer] = useState('')
     const [currentScore, setCurrentScore] = useState(0)
     const [finishedTime, setFinishedTime] = useState(0)
-    const [showAnswerWrong, setShowAnswerWrong] = useState(false)
+    const [errorObj, setErrorObj] = useState({ show: false, msg: "" })
     const [lives, setLives] = useState(3)
-    const [showTimer, setShowTimer] = useState(true)
 
     // Stores the object returned from the Tomato API
     const [gameObj, setGameObj] = useState({
@@ -43,6 +42,7 @@ export default function Game() {
                 const gameData = await response.json()
                 console.log(gameData)
                 setGameObj(gameData)
+                newDices()
             } catch (e) {
                 console.log("can't load game data")
             }
@@ -109,16 +109,18 @@ export default function Game() {
         setLives(3)
     }
 
-    // check if the answer is correct 
+    // check if player won the game
     function checkAnswer() {
-        if (playerAnswer == gameObj.solution) { // check if player won the game
-            setIsGameWon(true)
-            setFinishedTime(timeRemaining)
-            setPlayerAnswer("")
+        if (allSameValue) {
+            if (firstDicevalue == gameObj.solution) {
+                setIsGameWon(true)
+                setFinishedTime(timeRemaining)
+            } else {
+                setErrorObj({ show: true, msg: "Your Answer is Wrong!" })
+                setLives(prevLives => prevLives - 1) // deduct one life from lives if answer is wrong
+            }
         } else {
-            setShowAnswerWrong(true)
-            setLives(prevLives => prevLives - 1)
-
+            setErrorObj({ show: true, msg: "Select the same value for all cubes!" })
         }
     }
 
@@ -126,6 +128,61 @@ export default function Game() {
     function onChangeHandler(event) {
         setPlayerAnswer(event.target.value)
         setShowAnswerWrong(false)
+    }
+
+    // DICES
+    const [diceNums, setDiceNums] = useState(allNewDice())
+    const [firstDicevalue, setFirstDicevalue] = useState(null)
+    const [allSameValue, setAllSameValue] = useState(false)
+
+    // this will done by checking everytime when the 'diceNums' array changes we check all dices are same
+    useEffect(() => {
+        // this .every() return true if some condition true for all the element of that array
+        const allHeld = diceNums.every(dice => dice.isHeld)
+        setFirstDicevalue(diceNums[0].value)
+        setAllSameValue(diceNums.every(dice => dice.value === firstDicevalue))
+
+    }, [diceNums])
+
+    function allNewDice() {
+        let numbers = []
+        for (let i = 1; i <= level; i++) {
+            numbers.push(generateNewDie())
+        }
+        return numbers
+    }
+
+    function generateNewDie() {
+        return {
+            id: nanoid(),
+            value: Math.floor(Math.random() * 10), // generate number between 0 - 9
+            isHeld: false
+        }
+    }
+
+
+    function hold(id) {
+        setDiceNums(prevDiceNums => {
+            return prevDiceNums.map((dice) => {
+                return dice.id === id ? { ...dice, isHeld: !dice.isHeld } : dice
+
+            })
+        })
+
+        setErrorObj({ show: false, msg: "" })
+    }
+    const diceElements = diceNums.map((dice) => <Die key={dice.id} value={dice.value} isHeld={dice.isHeld} holdDice={() => hold(dice.id)} />)
+
+    function rollDice() {
+        setDiceNums(prevDiceNums => {
+            return prevDiceNums.map(dice => {
+                return dice.isHeld ? dice : generateNewDie()
+            })
+        })
+    }
+
+    function newDices() {
+        setDiceNums(allNewDice())
     }
 
     return (
@@ -153,11 +210,11 @@ export default function Game() {
             <div className="row border">
                 <div className="col  d-flex flex-column justify-content-center align-items-center">
 
-                    <h2 className='text-white'>Find the value of tomato</h2>
-                    {showAnswerWrong && <Alert variant="danger" className='my-1  w-50'>Your Answer is Wrong!</Alert >}
+                    {errorObj.show && <Alert variant="danger" className='my-1  w-50'>{errorObj.msg}</Alert >}
+                    <h3 className='text-white'>Find the value of tomato</h3>
                     {
                         (gameObj.question) ?
-                            <Image className="rounded  d-block" src={gameObj.question && gameObj.question} rounded />
+                            <Image width="500" className="rounded  d-block mb-4" src={gameObj.question && gameObj.question} rounded />
                             : <Spinner className='text-light' animation="border" />
                     }
 
@@ -166,13 +223,20 @@ export default function Game() {
 
             <div className="row border">
                 <div className="col input-group  d-flex  justify-content-center">
-                    <div className="w-25 m-2">
-                        <input value={playerAnswer} onChange={onChangeHandler} type="number" className="form-control" placeholder="enter your answer" aria-label="" aria-describedby="basic-addon1" />
-                    </div>
-                    <div className="input-group-prepend ">
-                        <button onClick={checkAnswer} className="btn btn-primary m-2" type="button">Check Answer</button>
-                    </div>
+                    <main >
+                        <h5 className='text'>Set the same value for all the cubes based on the number you think is the answer</h5>
+                        <div className='dice-container'>
+                            {diceElements}
+                        </div>
+                        <div className="input-group-prepend ">
+                            <button className='btn btn-primary m-2' onClick={isGameWon ? newDices : rollDice}>Roll Dices</button>
+                            <button onClick={checkAnswer} className="btn btn-success m-2" type="button">Check Answer</button>
+                        </div>
+                    </main>
+
                 </div>
+
+
             </div>
         </div >
     )

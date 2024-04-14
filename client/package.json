@@ -13,6 +13,7 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "nanoid": "^5.0.7",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-confetti": "^6.1.0",
