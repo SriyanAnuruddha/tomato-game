@@ -199,7 +199,7 @@ export default function Game() {
                 <div className="col border text-dark">
                     <h3 className='py-1'>Score: {currentScore}</h3>
                 </div>
-                <div className="col-5 border">
+                <div className="col border">
                     <h3 className='py-1'>Lives: {lives}</h3>
                 </div>
                 <div className="col border text-dark">
