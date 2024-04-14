@@ -144,6 +144,7 @@ export default function Game() {
 
     }, [diceNums])
 
+    // Create Dices acording to the level
     function allNewDice() {
         let numbers = []
         for (let i = 1; i <= level; i++) {
@@ -152,6 +153,7 @@ export default function Game() {
         return numbers
     }
 
+    // Generate new Dice Object object 
     function generateNewDie() {
         return {
             id: nanoid(),
@@ -186,7 +188,7 @@ export default function Game() {
     }
 
     return (
-        <div id='custom-bg' className="container my-5">
+        <div id='custom-bg' className="container my-4">
 
             {isGameWon && <Confetti />}
             <GameOverModal show={isTimeOver || lives == 0} onHide={() => setIsTimeOver(false)} />
@@ -194,7 +196,7 @@ export default function Game() {
 
             <div className="row text-center">
                 <div className="col border text-dark">
-                    <h3 className='py-1'>Level {level}</h3>
+                    <h3 className='py-1'>Level: {level}</h3>
                 </div>
                 <div className="col border text-dark">
                     <h3 className='py-1'>Score: {currentScore}</h3>
@@ -203,7 +205,7 @@ export default function Game() {
                     <h3 className='py-1'>Lives: {lives}</h3>
                 </div>
                 <div className="col border text-dark">
-                    <h3 className='py-1'>{(!isGameWon && lives > 0) && <span>Time : {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}</h3>
+                    <h3 className='py-1'>{(!isGameWon && lives > 0) && <span>Time: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}</h3>
                 </div>
             </div>
 
@@ -224,19 +226,17 @@ export default function Game() {
             <div className="row border">
                 <div className="col input-group  d-flex  justify-content-center">
                     <main >
-                        <h5 className='text'>Set the same value for all the cubes based on the number you think is the answer</h5>
+                        <h5 className='text-white'>Set the same value for all the cubes based on the number you think is the answer</h5>
                         <div className='dice-container'>
                             {diceElements}
                         </div>
                         <div className="input-group-prepend ">
-                            <button className='btn btn-primary m-2' onClick={isGameWon ? newDices : rollDice}>Roll Dices</button>
+                            <button className='btn btn-primary m-2' onClick={isGameWon ? newDices : rollDice}>Roll Cubes</button>
                             <button onClick={checkAnswer} className="btn btn-success m-2" type="button">Check Answer</button>
                         </div>
                     </main>
 
                 </div>
-
-
             </div>
         </div >
     )

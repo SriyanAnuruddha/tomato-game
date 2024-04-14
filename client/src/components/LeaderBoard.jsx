@@ -35,8 +35,8 @@ export default function LeaderBoard() {
         <Card className='shadow' >
             <Card.Body className='d-flex flex-column  justify-content-start align-items-center'>
 
-                <Card.Title className='pb-2 text-dark'> <h3>Leader Board</h3></Card.Title>
-                <table id='custom-bg' className='table table-bordered ' >
+                <Card.Title className='pb-2 text-dark'> <h3><u>Leader Board</u></h3></Card.Title>
+                <table id='custom-bg' className='table table-bordered' >
                     <thead >
                         <tr >
                             <th id='custom-bg'>#</th>
