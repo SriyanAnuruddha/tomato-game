@@ -92,12 +92,14 @@ export default function Game() {
 
     // determines the score based on the finishing time
     useEffect(() => {
-        if (finishedTime > 120 && finishedTime <= 180) {
-            setCurrentScore(prevScore => prevScore + 100)
-        } else if (finishedTime > 60 && finishedTime <= 120) {
-            setCurrentScore(prevScore => prevScore + 50)
-        } else if (finishedTime > 0 && finishedTime <= 60) {
-            setCurrentScore(prevScore => prevScore + 25)
+        if (level > 1) {
+            if (finishedTime > 120 && finishedTime <= 180) {
+                setCurrentScore(prevScore => prevScore + 100)
+            } else if (finishedTime > 60 && finishedTime <= 120) {
+                setCurrentScore(prevScore => prevScore + 50)
+            } else if (finishedTime > 0 && finishedTime <= 60) {
+                setCurrentScore(prevScore => prevScore + 25)
+            }
         }
     }, [finishedTime, level])
 
