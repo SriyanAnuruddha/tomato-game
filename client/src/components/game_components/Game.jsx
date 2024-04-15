@@ -92,7 +92,7 @@ export default function Game() {
 
     // determines the score based on the finishing time
     useEffect(() => {
-        if (level > 1) {
+        if (isGameWon) {
             if (finishedTime > 120 && finishedTime <= 180) {
                 setCurrentScore(prevScore => prevScore + 100)
             } else if (finishedTime > 60 && finishedTime <= 120) {
@@ -126,11 +126,6 @@ export default function Game() {
         }
     }
 
-    // get player answer
-    function onChangeHandler(event) {
-        setPlayerAnswer(event.target.value)
-        setShowAnswerWrong(false)
-    }
 
     // DICES
     const [diceNums, setDiceNums] = useState(allNewDice())
@@ -204,7 +199,7 @@ export default function Game() {
                     <h3 className='py-1'>Score: {currentScore}</h3>
                 </div>
                 <div className="col border">
-                    <h3 className='py-1'>Lives: {lives}</h3>
+                    <h3 className='py-1'>Attempts: {lives}</h3>
                 </div>
                 <div className="col border text-dark">
                     <h3 className='py-1'>{(!isGameWon && lives > 0) && <span>Time: {minutes}:{seconds < 10 ? `0${seconds}` : seconds}</span>}</h3>

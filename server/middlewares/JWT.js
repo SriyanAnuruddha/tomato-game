@@ -20,7 +20,7 @@ const validateToken = (req, res, next) => {
     }
 
     try {
-        const decodedToken = verify(accessToken, "thisIsMySecret")
+        const decodedToken = verify(accessToken, "thisIsMySecret") // decode the JWT token
         if (decodedToken) {
             req.username = decodedToken.username;
             req.email = decodedToken.email;
