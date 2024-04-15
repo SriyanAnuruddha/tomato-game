@@ -10,7 +10,7 @@ import GameWonModal from './GameWonModal';
 import GameOverModal from './GameOverModal'
 import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
-import Die from './Die';
+import Cube from './Cube';
 import { nanoid } from "nanoid";
 
 export default function Game() {
@@ -42,7 +42,7 @@ export default function Game() {
                 const gameData = await response.json()
                 console.log(gameData)
                 setGameObj(gameData)
-                newDices()
+                refreshCubes()
             } catch (e) {
                 console.log("can't load game data")
             }
@@ -113,8 +113,8 @@ export default function Game() {
 
     // check if player won the game
     function checkAnswer() {
-        if (allSameValue) {
-            if (firstDicevalue == gameObj.solution) {
+        if (areAllSame) {
+            if (firstCubeValue == gameObj.solution) {
                 setIsGameWon(true)
                 setFinishedTime(timeRemaining)
             } else {
@@ -127,31 +127,29 @@ export default function Game() {
     }
 
 
-    // DICES
-    const [diceNums, setDiceNums] = useState(allNewDice())
-    const [firstDicevalue, setFirstDicevalue] = useState(null)
-    const [allSameValue, setAllSameValue] = useState(false)
+    // CUBE GAME
+    const [cubeNumbers, setCubeNumbers] = useState(generateAllNewCubes())
+    const [firstCubeValue, setFirstCubeValue] = useState(null)
+    const [areAllSame, setAreAllSame] = useState(false)
 
-    // this will done by checking everytime when the 'diceNums' array changes we check all dices are same
+    // Check if all cubes have the same value when the cubeNumbers array changes
     useEffect(() => {
-        // this .every() return true if some condition true for all the element of that array
-        const allHeld = diceNums.every(dice => dice.isHeld)
-        setFirstDicevalue(diceNums[0].value)
-        setAllSameValue(diceNums.every(dice => dice.value === firstDicevalue))
+        const allHeld = cubeNumbers.every(cube => cube.isHeld)
+        setFirstCubeValue(cubeNumbers[0].value)
+        setAreAllSame(cubeNumbers.every(cube => cube.value === firstCubeValue))
+    }, [cubeNumbers])
 
-    }, [diceNums])
-
-    // Create Dices acording to the level
-    function allNewDice() {
-        let numbers = []
+    // Create new cubes according to the level
+    function generateAllNewCubes() {
+        let numbers = [];
         for (let i = 1; i <= level; i++) {
-            numbers.push(generateNewDie())
+            numbers.push(createNewCube());
         }
-        return numbers
+        return numbers;
     }
 
-    // Generate new Dice Object object 
-    function generateNewDie() {
+    // Generate a new cube object 
+    function createNewCube() {
         return {
             id: nanoid(),
             value: Math.floor(Math.random() * 10), // generate number between 0 - 9
@@ -159,30 +157,34 @@ export default function Game() {
         }
     }
 
-
-    function hold(id) {
-        setDiceNums(prevDiceNums => {
-            return prevDiceNums.map((dice) => {
-                return dice.id === id ? { ...dice, isHeld: !dice.isHeld } : dice
-
+    // Hold or release a cube
+    function holdCube(id) {
+        setCubeNumbers(prevCubeNumbers => {
+            return prevCubeNumbers.map((cube) => {
+                return cube.id === id ? { ...cube, isHeld: !cube.isHeld } : cube
             })
         })
 
-        setErrorObj({ show: false, msg: "" })
+        setErrorObj({ show: false, msg: "" }) // hide error when cube is clicked!
     }
-    const diceElements = diceNums.map((dice) => <Die key={dice.id} value={dice.value} isHeld={dice.isHeld} holdDice={() => hold(dice.id)} />)
 
-    function rollDice() {
-        setDiceNums(prevDiceNums => {
-            return prevDiceNums.map(dice => {
-                return dice.isHeld ? dice : generateNewDie()
+    const cubeElements = cubeNumbers.map((cube) => <Cube key={cube.id} value={cube.value} isHeld={cube.isHeld} holdCube={holdCube} id={cube.id} />)
+
+
+    // Roll the cubes that are not held
+    function rollCubes() {
+        setCubeNumbers(prevCubeNumbers => {
+            return prevCubeNumbers.map(cube => {
+                return cube.isHeld ? cube : createNewCube()
             })
         })
     }
 
-    function newDices() {
-        setDiceNums(allNewDice())
+    // Generate new set of cubes
+    function refreshCubes() {
+        setCubeNumbers(generateAllNewCubes())
     }
+
 
     return (
         <div id='custom-bg' className="container my-4">
@@ -225,10 +227,10 @@ export default function Game() {
                     <main >
                         <h5 className='text-white'>Set the same value for all the cubes based on the number you think is the answer</h5>
                         <div className='dice-container'>
-                            {diceElements}
+                            {cubeElements}
                         </div>
                         <div className="input-group-prepend ">
-                            <button className='btn btn-primary m-2' onClick={isGameWon ? newDices : rollDice}>Roll Cubes</button>
+                            <button className='btn btn-primary m-2' onClick={isGameWon ? refreshCubes : rollCubes}>Roll Cubes</button>
                             <button onClick={checkAnswer} className="btn btn-success m-2" type="button">Check Answer</button>
                         </div>
                     </main>
