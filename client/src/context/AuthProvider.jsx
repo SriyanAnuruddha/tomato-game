@@ -18,11 +18,11 @@ export default function AuthProvider({ children }) {
             try {
                 const response = await fetch('/api/users/authenticate')
                 const user = await response.json();
-                
-                if(user.isAuthenticated){
+
+                if (user.isAuthenticated) {
                     setAuthUser(user)
                     setAuthType(1)
-                }else{
+                } else {
                     setAuthUser(unAuthorizedUser)
                 }
             } catch (e) {
@@ -34,15 +34,17 @@ export default function AuthProvider({ children }) {
 
 
 
-
+    // Set user data when they login
     const login = (user) => {
         setAuthUser(user)
     }
 
+    // Reset user data when they logout
     const logout = () => {
         setAuthUser(unAuthorizedUser)
     }
 
+    // Set auth type
     const changeAuthType = (type) => {
         setAuthType(type)
     }

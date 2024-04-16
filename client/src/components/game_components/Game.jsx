@@ -112,29 +112,34 @@ export default function Game() {
     }
 
     // check if player won the game
-    function checkAnswer() {
-        if (areAllSame) {
-            if (firstCubeValue == gameObj.solution) {
-                setIsGameWon(true)
-                setFinishedTime(timeRemaining)
+    function checkAnswerHandler() {
+        if (allCubesHeld) { // check if all the cubes are selected
+            if (areAllSame) { // check if all the cubes have the same value
+                if (firstCubeValue == gameObj.solution) { // check all first cube value is equal to the real answer
+                    setIsGameWon(true)
+                    setFinishedTime(timeRemaining)
+                } else {
+                    setErrorObj({ show: true, msg: "Your Answer is Wrong!" })
+                    setLives(prevLives => prevLives - 1) // deduct one life from lives if answer is wrong
+                }
             } else {
-                setErrorObj({ show: true, msg: "Your Answer is Wrong!" })
-                setLives(prevLives => prevLives - 1) // deduct one life from lives if answer is wrong
+                setErrorObj({ show: true, msg: "Select the same value for all cubes!" })
             }
         } else {
-            setErrorObj({ show: true, msg: "Select the same value for all cubes!" })
+            setErrorObj({ show: true, msg: "Click on the cube(s) to lock their values!" })
         }
     }
 
 
-    // CUBE GAME
+    // Cube Code
     const [cubeNumbers, setCubeNumbers] = useState(generateAllNewCubes())
     const [firstCubeValue, setFirstCubeValue] = useState(null)
     const [areAllSame, setAreAllSame] = useState(false)
+    const [allCubesHeld, setAllCubesHeld] = useState(false)
 
     // Check if all cubes have the same value when the cubeNumbers array changes
     useEffect(() => {
-        const allHeld = cubeNumbers.every(cube => cube.isHeld)
+        setAllCubesHeld(cubeNumbers.every(cube => cube.isHeld))
         setFirstCubeValue(cubeNumbers[0].value)
         setAreAllSame(cubeNumbers.every(cube => cube.value === firstCubeValue))
     }, [cubeNumbers])
@@ -231,7 +236,7 @@ export default function Game() {
                         </div>
                         <div className="input-group-prepend ">
                             <button className='btn btn-primary m-2' onClick={isGameWon ? refreshCubes : rollCubes}>Roll Cubes</button>
-                            <button onClick={checkAnswer} className="btn btn-success m-2" type="button">Check Answer</button>
+                            <button onClick={checkAnswerHandler} className="btn btn-success m-2" type="button">Check Answer</button>
                         </div>
                     </main>
 

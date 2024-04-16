@@ -15,15 +15,13 @@ export default function SingUp() {
         confirmPassword: ""
     })
 
-    const [isPasswordNotEqual, setIsPasswordNotEqual] = useState(false)
-
-
+    // sends signup form data to the server
     function handleSubmit(event) {
         event.preventDefault(); // Prevents the page from reloading after clicking the submit button
 
         // check password and confirm password is equal
         if (signUpData.password !== signUpData.confirmPassword) {
-            setIsPasswordNotEqual(true)
+            setError({ showError: true, message: "passwords don't match!" })
         } else {
             if (signUpData.username && signUpData.email) {
                 (async function () {
@@ -60,12 +58,12 @@ export default function SingUp() {
                     }
                 })();
             }
-            setIsPasswordNotEqual(false) // reset passwrod not equal state
+            setError({ showError: false, message: "" })
         }
     }
 
     // Retrieve the signup form data and update the signup state accordingly
-    function onClickHandler(event) {
+    function onChangeHandler(event) {
         const { name, value } = event.target
         setSignUpData(prevSignUpData => {
             return {
@@ -73,6 +71,8 @@ export default function SingUp() {
                 [name]: value
             }
         })
+
+        setError({ showError: false, message: "" }) // stop showing the error when new values entered to the text field
     }
 
     return (
@@ -80,23 +80,22 @@ export default function SingUp() {
             {error.showError && <Alert variant="danger"> {error.message}</Alert>}
             <Form.Group className="mb-3" controlId="formBasicUsername">
                 <Form.Label>Username</Form.Label>
-                <Form.Control required onChange={onClickHandler} name='username' value={signUpData.username} type="text" placeholder="Enter Username" />
+                <Form.Control required onChange={onChangeHandler} name='username' value={signUpData.username} type="text" placeholder="Enter Username" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email Addres</Form.Label>
-                <Form.Control required onChange={onClickHandler} name='email' value={signUpData.email} type="email" placeholder="Email" />
+                <Form.Control required onChange={onChangeHandler} name='email' value={signUpData.email} type="email" placeholder="Email" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control required onChange={onClickHandler} name='password' value={signUpData.password} type="password" placeholder="Password" />
+                <Form.Control required onChange={onChangeHandler} name='password' value={signUpData.password} type="password" placeholder="Password" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formBasicConfirmPassword">
                 <Form.Label>Confirm Password</Form.Label>
-                <Form.Control required onChange={onClickHandler} name='confirmPassword' value={signUpData.confirmPassword} type="password" placeholder="Password" />
-                {isPasswordNotEqual && <p className='text-danger'> passwords don't match!</p>}
+                <Form.Control required onChange={onChangeHandler} name='confirmPassword' value={signUpData.confirmPassword} type="password" placeholder="Password" />
             </Form.Group>
 
             <Button variant="primary" type="submit" className='w-100'>

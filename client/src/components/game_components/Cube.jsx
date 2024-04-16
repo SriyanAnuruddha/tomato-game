@@ -1,4 +1,6 @@
 export default function Cube(props) {
+
+    // Change the cube color to green if it was clicked!
     const styles = {
         backgroundColor: props.isHeld ? '#59E391' : 'white'
     }

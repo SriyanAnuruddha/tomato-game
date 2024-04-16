@@ -5,7 +5,7 @@ import AuthContext from '../context/AuthContext';
 import Alert from 'react-bootstrap/Alert';
 
 export default function Login() {
-    const {login, changeAuthType } = useContext(AuthContext)
+    const { login, changeAuthType } = useContext(AuthContext)
     const [error, setError] = useState({ showError: false, message: "" })
 
     // stores username and password
@@ -14,6 +14,7 @@ export default function Login() {
         password: "",
     })
 
+    // Sends login data to the server
     function handleSubmit(event) {
         event.preventDefault(); // prevent page from refreshing after clicking submit button(login Button)
 
@@ -50,7 +51,7 @@ export default function Login() {
     }
 
     // Get the form data and update the state
-    function onClickHandler(event) {
+    function onChangeHandler(event) {
         const { name, value } = event.target
         setLoginData(prevLoginData => {
             return {
@@ -59,7 +60,7 @@ export default function Login() {
             }
         })
 
-        setError({ showError: false, message: "" })
+        setError({ showError: false, message: "" }) // clear the login form values
     }
 
 
@@ -68,12 +69,12 @@ export default function Login() {
             {error.showError && <Alert variant="danger"> {error.message}</Alert>}
             <Form.Group className="mb-3" controlId="LoginformBasicUsername">
                 <Form.Label>Username</Form.Label>
-                <Form.Control required onChange={onClickHandler} name='username' value={loginData.username} type="text" placeholder="Enter Username" />
+                <Form.Control required onChange={onChangeHandler} name='username' value={loginData.username} type="text" placeholder="Enter Username" />
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="LoginformBasicPassword">
                 <Form.Label>Password</Form.Label>
-                <Form.Control required onChange={onClickHandler} name='password' value={loginData.password} type="password" placeholder="Password" />
+                <Form.Control required onChange={onChangeHandler} name='password' value={loginData.password} type="password" placeholder="Password" />
             </Form.Group>
 
             <Button type="submit" variant="primary" className='w-100'>

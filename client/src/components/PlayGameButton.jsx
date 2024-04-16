@@ -21,9 +21,9 @@ export default function PlayGameButton() {
 
 
     // Prevent the user from accessing the game page if they are not already logged in
-    function showError(event) {
+    function onClickHandler(event) {
         if (!authUser.isAuthenticated) {
-            event.preventDefault()
+            event.preventDefault() // Prevent redirect
             setShowAlert(true)
         }
     }
@@ -31,7 +31,7 @@ export default function PlayGameButton() {
     return (
         <div className="  d-flex flex-column">
             {showAlert && !authUser.isAuthenticated && <Alert variant="warning">Please log in to play the game!</Alert >}
-            <Link onClick={showError} to='/game'><Card.Img variant="top" className="rounded shadow" src={playImage} /> </Link>
+            <Link onClick={onClickHandler} to='/game'><Card.Img variant="top" className="rounded shadow" src={playImage} /> </Link>
         </div >
     )
 }

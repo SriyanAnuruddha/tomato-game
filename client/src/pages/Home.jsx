@@ -10,10 +10,11 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../context/AuthContext";
 
 export default function Home() {
-    const { authUser, authType,changeAuthType } = useContext(AuthContext)
-    const [showMessage,setShowMessage] =useState(false)
+    const { authUser, authType, changeAuthType } = useContext(AuthContext)
+    const [showMessage, setShowMessage] = useState(false)
     const [message, setMessage] = useState("")
 
+    // Show the message acording the authentication type
     useEffect(() => {
         if (authType == 3) {
             setShowMessage(true)
@@ -28,12 +29,12 @@ export default function Home() {
     }, [authUser, authType])
 
     // hide the message after 3 seconds
-    useEffect(()=>{
-        setTimeout(()=>{
+    useEffect(() => {
+        setTimeout(() => {
             changeAuthType(0)
             setShowMessage(false)
-        },3500)
-    },[authType])
+        }, 3500)
+    }, [authType])
 
     return (
         <div>
