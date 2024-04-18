@@ -38,7 +38,7 @@ export default function SingUp() {
 
                         const user = await response.json();
 
-                        if (user.isAuthenticated) { // check use successfully signup
+                        if (user.isAuthenticated) { // check if the user has successfully signed up
                             login(user)// set user context state
                             changeAuthType(3)
                             setSignUpData({
