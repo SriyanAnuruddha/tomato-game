@@ -23,8 +23,8 @@ export default function PlayGameButton() {
     // Prevent the user from accessing the game page if they are not already logged in
     function onClickHandler(event) {
         if (!authUser.isAuthenticated) {
-            event.preventDefault() // Prevent redirect
-            setShowAlert(true)
+            event.preventDefault() // Prevent redirect to the game page
+            setShowAlert(true) // show error
         }
     }
 

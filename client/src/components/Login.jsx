@@ -53,6 +53,8 @@ export default function Login() {
     // Get the form data and update the state
     function onChangeHandler(event) {
         const { name, value } = event.target
+
+        // get login credentials from text fields
         setLoginData(prevLoginData => {
             return {
                 ...prevLoginData,
